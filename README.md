@@ -1,166 +1,55 @@
-# DEP Data Engineering Starter Kit
+# Price, Poverty, and Superbugs: Modeling AMR Exposure Risk in Tondo, Manila
 
-Welcome to the **Data Engineering Pilipinas Open Track**. This folder is your project scaffold — everything you need to build one real, deployable data project over 24 weeks.
+## Problem Statement
 
----
+The World Health Organization considers antimicrobial resistance (AMR) one of the top global public health threats. Also known as "superbugs," AMR does not exist only in contaminated food and beverages resulting from unhygienic food-handling practices but it is also found in contaminated processing equipment, storage facilities in slaughterhouses, and animal waste. So far, it has caused an estimated 1.27 million deaths globally in 2019, with projections of up to 10 million deaths by 2050 if left unaddressed. This means superbugs pose a serious threat to modern medicine, making infections harder to treat and routine medical procedures considerably riskier.
 
-## Before You Start
+On April 30, 2026, BS Public Health students from UP Manila released the results of a 2024 study titled **_"Sip or Skip?: Microbiological Assessment for Antimicrobial Resistant Bacteria in Beverage Contents, Containers, and Palm Swabs of Vendors in Tondo, Manila."_** The study involved vendor palm swabs, cup swabs, and separate tests of water, ice, and the beverages themselves. Results showed heavy contamination across samples, including bacteria capable of causing disease, spreading infection, and resisting commonly used antibiotics. Liquid samples registered bacterial counts above allowable limits for powdered beverages and potable water, indicating widespread microbiological contamination across commonly consumed drinks on the streets. 
 
-You need:
-- A free [GitHub account](https://github.com)
-- [Python 3.10+](https://www.python.org/downloads/) installed on your machine
-- [Git](https://git-scm.com/) installed and configured
+WHO experts emphasize a "One Health" approach to reducing the impact of AMR, calling for coordinated action across sectors to improve hygiene practices. In that spirit, and as a requirement of the Data Engineering Pilipinas Cohort, this study aims to give the general public, policymakers, and concerned authorities a clearer picture of the _non-health_ factors that contribute to a person's susceptibility to AMR exposure. One factor that is often overlooked is income which is the specific gap this study addresses.
 
----
+## Research Question
 
-## Step 1 — Copy This Starter Kit to Your GitHub
+ **"*Among low-income street-food consumers in Tondo, Manila, how does the price gap between AMR-contaminated street-vended beverages and microbiologically safer alternatives affect their continued exposure to antimicrobial-resistant bacteria?*"**
 
-You have two options:
-
-**Option A — Use This Repo as a Template (recommended)**
-
-1. Go to the top of this GitHub repo and click **Use this template → Create a new repository**
-2. Name it something like `dep-data-engineering-<your-name>`
-3. Set it to **Public** (required for milestone submission)
-4. Click **Create repository**
-
-**Option B — Fork and Copy Manually**
-
-1. Fork this repo to your account
-2. In your fork, delete everything outside of `cohorts/starter-kit/` and restructure the contents as your root
-
-> Your repo must be **public** at all times so reviewers and the auto-checker can access it. Do not make it private at any point during the program — even temporarily. If your repo is private when you submit, the auto-check will fail and your submission will not be reviewed.
-
----
-
-## Step 2 — Clone Your Repo Locally
-
-```bash
-git clone https://github.com/<your-username>/<your-repo-name>.git
-cd <your-repo-name>
-```
-
----
-
-## Step 3 — Understand the Folder Structure
+### Causal Chain
 
 ```
-your-repo/
-├── data/
-│   ├── raw/            ← Phase 2: raw data files go here
-│   └── processed/      ← Phase 3: cleaned/transformed data goes here
-├── scripts/
-│   ├── ingest.py       ← Phase 2: your data ingestion script
-│   └── transform.py    ← Phase 3: your data transformation script
-├── notebooks/          ← Phase 4 & 5: your analysis notebooks
-├── output/
-│   └── figures/        ← Phase 4: saved charts and visuals
-├── dashboard/
-│   └── index.html      ← Phase 6: your deployed dashboard or report
-├── requirements.txt    ← list all your Python dependencies here
-└── README.md           ← this file — update it as your project grows
+Household income / daily food budget
+        │
+        ▼
+Price gap (street drink vs. safer alternative)
+        │
+        ▼
+Probability of choosing the cheaper, contaminated option
+        │
+        ▼
+Cumulative AMR exposure over time (weekly/monthly servings consumed)
 ```
 
-You will fill in each folder phase by phase. Do not try to fill everything at once.
+## Audience
 
----
+This study is grounded in Tondo, Manila, since that is the population the underlying microbiological data was drawn from. Beyond Tondo, the simulation is intended for the general public living in similarly dense, low-income urban communities elsewhere in the Philippines who may face the same exposure dynamic due to price and income gaps. It is also intended as a reference tool for policymakers and local health officials weighing interventions (subsidies, vendor regulation, public water access) against the lived economic constraints of the communities they affect.
 
-## Step 4 — Set Up Your Python Environment
+## Key Metric (KPI)
 
-```bash
-python -m venv venv
-source venv/bin/activate        # Mac/Linux
-venv\Scripts\activate           # Windows
+**Expected number of AMR exposure events per month**, as a function of:
+- household income / daily food budget, and
+- the price gap between street-vended beverages and a safer alternative.
+## Likely Data Sources
 
-pip install -r requirements.txt
-```
+| Data Needed                                        | Likely Source                                                                                                                                                                             |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Household income / poverty threshold, NCR          | Philippine Statistics Authority (PSA)<br>- https://psa.gov.ph/statistics/income-expenditure/fies<br>- https://psa.gov.ph/statistics/poverty                                               |
+| Average daily wage, NCR/Manila                     | PSA<br>- https://psa.gov.ph/statistics/occupational-wages-survey                                                                                                                          |
+| Price of safer alternatives (bottled water/drinks) | DTI Suggested Retail Price (SRP) Bulletin for Basic Necessities and Prime Commodities.<br>- https://www.dti.gov.ph/dti-consumer-space/dti-latest-srps-basic-necessities-prime-commodities |
+| Price of street-vended palamig in Tondo            | No published dataset exists; requires direct fieldwork/observation or asking people from Tondo through social media                                                                       |
+## Possible Final Dashboard
 
-Add any new packages you install to `requirements.txt`:
+The study aims to produce an interactive simulation surfacing the key metric above. Core interactive elements:
 
-```bash
-pip freeze > requirements.txt
-```
+- A slider for **price gap** between street drinks and the chosen safer alternative.
+- A slider or selector for **income bracket / daily food budget**.
+- Output: **estimated AMR exposure events per month**, updating live as inputs change.
 
----
-
-## Step 5 — Work Through the Phases
-
-| Phase | Weeks | What you build |
-|-------|-------|----------------|
-| 1 — Foundations | 1–4 | Define your problem, find your data source, set up this repo |
-| 2 — Data Collection | 5–6 | Write `scripts/ingest.py`, pull raw data into `data/raw/` |
-| 3 — Data Processing | 7–12 | Write `scripts/transform.py`, clean and model data in `data/processed/` |
-| 4 — Analysis & Insights | 13–16 | Explore data in `notebooks/`, produce charts in `output/figures/` |
-| 5 — Predictive / Alt Track | 17–20 | Build a model (Path A) or advanced analysis (Path B) |
-| 6 — Deployment | 21–24 | Deploy `dashboard/index.html` via GitHub Pages, prepare your demo |
-
----
-
-## Step 6 — Submit at Each Milestone
-
-At the end of each phase, submit a milestone issue on the **curriculum repo**:
-
-1. Go to [github.com/dataengineeringpilipinas/dep-data-engineering-open-track/issues/new/choose](https://github.com/dataengineeringpilipinas/dep-data-engineering-open-track/issues/new/choose)
-2. Select the template matching your milestone (e.g. **Milestone 1 — Foundations Complete**)
-3. Fill in your name, cohort, repo URL, and **commit hash**
-
-**How to get your commit hash:**
-
-```bash
-git log --oneline -1
-# Example output: a1b2c3d feat: add ingestion script
-# Your commit hash is: a1b2c3d (or the full 40-character version)
-```
-
-Copy the full hash:
-
-```bash
-git log -1 --format="%H"
-```
-
-After you submit, the auto-checker will run and post a comment on your issue within a few minutes. Fix anything flagged before waiting for a reviewer.
-
----
-
-## Step 7 — Enable GitHub Pages (Phase 6)
-
-To deploy your dashboard:
-
-1. In your repo, go to **Settings → Pages**
-2. Under **Source**, select **Deploy from a branch**
-3. Choose `main` branch and `/dashboard` folder
-4. Click **Save** — your live URL will appear as `https://<your-username>.github.io/<your-repo-name>/`
-
----
-
-## Updating Your README
-
-Replace this file with your own project README as you progress. At minimum, your README should include:
-
-- What problem you are solving
-- Where your data comes from
-- How to run your scripts (`ingest.py`, `transform.py`)
-- Your key findings (Phase 4+)
-- Your live dashboard URL (Phase 6)
-
----
-
-## Getting Help
-
-- Check the weekly READMEs in the curriculum repo for topic guides and resources
-- Post in the community Discord if you are stuck after 2 hours on a problem
-- Review `docs/FAQ.md` in the curriculum repo for common questions
-
----
-
-## Milestone Quick Reference
-
-| Milestone | When | What reviewers check |
-|-----------|------|---------------------|
-| M0 | Week 1 | Repo is public, README describes your project |
-| M1 | Week 3–4 | Folder structure exists, requirements.txt present |
-| M2 | Week 6 | `ingest.py` runs, `data/raw/` has real data |
-| M3 | Week 12 | `transform.py` runs, `data/processed/` has output |
-| M4 | Week 16 | Notebook exists and runs end-to-end |
-| M5 | Week 20 | Pipeline is connected, path-specific outputs saved |
-| M6 | Week 24 | Dashboard is live at a public URL |
+The underlying logic is best described as an **economic decision / risk-exposure model**, not an epidemiological transmission model, since it traces a consumer choice mechanism rather than person-to-person spread.
